@@ -68,15 +68,34 @@ def run_test_case(nums, method):
 
     total_time = end_time-start_time
 
-    details = {"size": len(nums), "max": maxval, "subarray": ",".join([str(x) for x in subarray]), "inversions": inversions, "elapsed": total_time}
+    details = {"size": len(nums), "max": maxval, "subarray": subarray, "nums": nums, "elapsed": total_time}
     
     print_case_details(details)
 
 
 def brute_force(nums):
-    count = 0
+    maxval = 0
+    maxstart = 0;
+    maxend = 0
     
-    return count   
+    vals = [ [ 0 for i in range( len(nums) ) ] for j in range( len (nums) ) ]
+
+    for end in range( len(nums) ):
+        vals[0][end] = sum( nums[:end] )
+        if vals[0][end] > maxval:
+            maxval = vals[0][end];
+            maxstart = 0
+            maxend = end
+
+    for end in reversed( range( len(nums) ) ):
+        for start in range( len(nums)-1 ):
+            vals[start+1][end] = vals[start][end] - nums[start]
+            if vals[start+1][end] > maxval:
+                maxval = vals[start+1][end] 
+                maxstart = start+1
+                maxend = end
+    
+    return (maxval, nums[maxstart:maxend]);   
 
 
 def divide(nums):
