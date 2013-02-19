@@ -55,11 +55,11 @@ def run_test_case(nums, method):
     start_time = time.time()
 
     if(method == 1):
-         inversions = brute_force(nums)
+         (maxval, subarray) = brute_force(nums)
     elif(method == 2):
-         inversions = divide(nums)
+         (maxval, subarray)= divide(nums)
     elif(method == 3):
-         (inversions,sorted_nums) = merge_count(nums)
+         (maxval, subarray) = dynamic(nums)
     else:
         print("Invalid Method Input Must be 1, 2 or 3")
         return 0
@@ -68,7 +68,7 @@ def run_test_case(nums, method):
 
     total_time = end_time-start_time
 
-    details = {"max": len(nums), "nums": ",".join([str(x) for x in nums]), "inversions": inversions, "elapsed": total_time}
+    details = {"size": len(nums), "max": maxval, "subarray": ",".join([str(x) for x in subarray]), "inversions": inversions, "elapsed": total_time}
     
     print_case_details(details)
 
@@ -76,67 +76,19 @@ def run_test_case(nums, method):
 def brute_force(nums):
     count = 0
     
-    for x in range(0, len(nums)):
-        for y in range(x, len(nums)):
-            #print(int(nums[x]), int(nums[y]))
-            if nums[x] > nums[y]:
-                count += 1
-    
     return count   
 
 
 def divide(nums):
     count = 0
     
-    if( len(nums) > 2 ):
-        mid = len(nums)/2
-        count += divide(nums[0:len(nums)/2])
-        count += divide(nums[len(nums)/2:len(nums)])
-        
-        for x in range(0, len(nums)/2):
-            for y in range(len(nums)/2, len(nums)):
-                if nums[x] > nums[y]:
-                    count += 1
-
-    elif( len(nums) > 1):
-        if( nums[0] > nums[1] ):
-            count += 1
-    
     return count
 
 
-def merge_count(nums):
+def dynamic(nums):
     count = 0
-    
-    if( len(nums) > 1 ):
-        (count, merged_nums) = merge( merge_count( nums[0:len(nums)/2] ), merge_count( nums[len(nums)/2:] ) ) 
-        #print (count, merged_nums)
-        return (count, merged_nums)
-    else:
-        return (0, nums)
 
-
-def merge(count_arr1, count_arr2):
-    (count1, arr1) = count_arr1
-    (count2, arr2) = count_arr2
-    
-    count = count1 + count2
-
-    #print arr1
-    #print arr2
-
-    if( not(arr1) ):
-        return (0, arr2)
-    if( not(arr2) ):
-        return (0, arr1)
-
-    if( arr1[0] <= arr2[0] ):
-        (new_count, merged_arrays) = merge( (0, arr1[1:]), (0, arr2))
-        return (new_count+count, [arr1[0]]+merged_arrays )
-    elif( arr1[0] > arr2[0] ):
-        (new_count, merged_arrays) = merge((0, arr1), (0, arr2[1:]))
-        return (new_count+count+len(arr1), [arr2[0]]+merged_arrays )
-
+    return (0, nums)
 
 def print_case_details(details):
     global NUM_TEST_CASES
@@ -144,9 +96,10 @@ def print_case_details(details):
     Test Case: {0}
     Input: {1}
     n: {2}
-    Inversions: {3}
-    Elapsed Time: {4}
-    """.format(NUM_TEST_CASES, details["nums"], details["max"], details["inversions"], details["elapsed"])
+    output:{3}
+    Max: {4}
+    Elapsed Time: {5}
+    """.format(NUM_TEST_CASES, details["nums"], details["size"], details["subarray"], details["max"], details["elapsed"])
     
     NUM_TEST_CASES = NUM_TEST_CASES + 1
 
