@@ -12,6 +12,8 @@ import resource
 
 NUM_TEST_CASES = 1
 
+DEBUG = 0
+
 def main():
     sys.setrecursionlimit(100000)
     soft, hard = resource.getrlimit(resource.RLIMIT_STACK)
@@ -81,15 +83,21 @@ def brute_force(nums):
     vals = [ [ 0 for i in range( len(nums) ) ] for j in range( len (nums) ) ]
 
     for end in range( len(nums) ):
-        vals[0][end] = sum( nums[:end] )
+        vals[0][end] = sum( nums[:end+1] )
+        
+        if DEBUG: print "0,{}:{}".format(end, vals[0][end]) 
+        
         if vals[0][end] > maxval:
             maxval = vals[0][end];
             maxstart = 0
-            maxend = end
+            maxend = end+1
 
     for end in reversed( range( len(nums) ) ):
-        for start in range( len(nums)-1 ):
+        for start in range( end ):
             vals[start+1][end] = vals[start][end] - nums[start]
+            
+            if DEBUG: print "{},{}:{}".format(start+1,end, vals[start+1][end])
+            
             if vals[start+1][end] > maxval:
                 maxval = vals[start+1][end] 
                 maxstart = start+1
