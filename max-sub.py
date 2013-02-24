@@ -155,6 +155,32 @@ def dynamic(nums):
     end = 0
     maxval = 0
 
+    vals = [0 for x in range(len(nums))]
+
+    for i in range(1, len(nums)):
+        if(i == 0):
+            vals[i] = nums[i]
+        else:
+            if(vals[i-1]+nums[i] > vals[i-1]):
+                vals[i] = vals[i-1]+nums[i]
+            elif(nums[i] + vals[i-1] < 0):
+                vals[i] = 0
+            elif(nums[i] < vals[i-1]):
+                vals[i] = vals[i-1]+nums[i]
+
+    for i in range(len(nums)):
+        if(vals[i] > maxval):
+            maxval = vals[i]
+            end = i+1
+
+    temp = maxval
+    for i in reversed(range(end)):
+        if(temp <= 0):
+            start = i+1
+            break
+        else:
+            temp = temp - nums[i];
+
     return (maxval, start, end)
 
 def print_case_details(details):
