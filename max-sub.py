@@ -151,9 +151,11 @@ def divide(nums):
         return (rightmax, rightstart+middle, rightend+middle)
 
 def dynamic(nums):
-    count = 0
+    start = 0
+    end = 0
+    maxval = 0
 
-    return (0, nums)
+    return (maxval, start, end)
 
 def print_case_details(details):
     global NUM_TEST_CASES
