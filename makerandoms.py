@@ -27,7 +27,10 @@ def main():
         for i in range(0, args.count):
             for x in range(1, int(args.size)+1 ):
                 x = random.randrange(2000)
-                output.write("{},".format(x-1000))
+                if(x == arg.size):
+                    output.write("{}".format(x-1000))
+                else:
+                    output.write("{},".format(x-1000))
 
             output.write("\n")
         
