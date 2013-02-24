@@ -149,7 +149,7 @@ def divide(nums):
     (leftmax, leftstart, leftend) = divide(nums[:middle])
     (rightmax, rightstart, rightend) = divide(nums[middle:])
 
-    print( "left({}, {}, {}) right({}, {}, {}) ".format(leftmax, leftstart, leftend, rightmax, rightstart, rightend))
+    if DEBUG: print( "left({}, {}, {}) right({}, {}, {}) ".format(leftmax, leftstart, leftend, rightmax, rightstart, rightend))
 
     if(midmax >= leftmax and midmax >= rightmax):
         return (midmax, midstart, midend)
@@ -168,13 +168,10 @@ def dynamic(nums):
     for i in range(1, len(nums)):
         if(i == 0):
             vals[i] = nums[i]
+        elif(nums[i] + vals[i-1] < 0):
+            vals[i] = 0
         else:
-            if(vals[i-1]+nums[i] > vals[i-1]):
-                vals[i] = vals[i-1]+nums[i]
-            elif(nums[i] + vals[i-1] < 0):
-                vals[i] = 0
-            elif(nums[i] < vals[i-1]):
-                vals[i] = vals[i-1]+nums[i]
+            vals[i] = vals[i-1]+nums[i]
 
     for i in range(len(nums)):
         if(vals[i] > maxval):
