@@ -57,11 +57,11 @@ def run_test_case(nums, method):
     start_time = time.time()
 
     if(method == 1):
-         (maxval, subarray) = brute_force(nums)
+         (maxval, start, end) = brute_force(nums)
     elif(method == 2):
-         (maxval, subarray)= divide(nums)
+         (maxval, start, end)= divide(nums)
     elif(method == 3):
-         (maxval, subarray) = dynamic(nums)
+         (maxval, start, end) = dynamic(nums)
     else:
         print("Invalid Method Input Must be 1, 2 or 3")
         return 0
@@ -70,14 +70,14 @@ def run_test_case(nums, method):
 
     total_time = end_time-start_time
 
-    details = {"size": len(nums), "max": maxval, "subarray": subarray, "nums": nums, "elapsed": total_time}
+    details = {"size": len(nums), "max": maxval, "subarray": nums[start:end], "nums": nums, "elapsed": total_time}
     
     print_case_details(details)
 
 
 def brute_force(nums):
     maxval = 0
-    maxstart = 0;
+    maxstart = 0
     maxend = 0
     
     vals = [ [ 0 for i in range( len(nums) ) ] for j in range( len (nums) ) ]
@@ -103,14 +103,52 @@ def brute_force(nums):
                 maxstart = start+1
                 maxend = end
     
-    return (maxval, nums[maxstart:maxend]);   
+    return (maxval, maxstart, maxend);   
 
 
 def divide(nums):
-    count = 0
-    
-    return count
+    tempmax = 0
+    midmax = 0
+    midstart = 0
+    midend = 0
 
+    leftmax = 0
+    rightmax = 0
+    
+    middle = len(nums)/2
+
+    midstart = middle
+    midend = middle
+
+    if( len(nums) == 1):
+        return (nums[0], 0, 1) 
+
+    for i in reversed(range(middle)):
+        tempmax = tempmax+nums[i]
+        if( tempmax > leftmax ):
+            leftmax = tempmax
+            midstart = i
+
+    tempmax = 0
+
+    for i in range(middle, len(nums)):
+        tempmax = tempmax + nums[i]
+        if( tempmax > rightmax ):
+            rightmax = tempmax
+            midend = i+1
+
+    midmax = leftmax+rightmax
+
+    (leftmax, leftstart, leftend) = divide(nums[:middle])
+    (rightmax, rightstart, rightend) = divide(nums[middle:])
+
+
+    if(midmax >= leftmax and midmax >= rightmax):
+        return (midmax, midstart, midend)
+    elif(leftmax > rightmax and leftmax > midmax):
+        return (leftmax, leftstart, leftend)
+    elif(rightmax > leftmax and rightmax > midmax):
+        return (rightmax, rightstart+middle, rightend+middle)
 
 def dynamic(nums):
     count = 0
