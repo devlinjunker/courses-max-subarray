@@ -26,22 +26,9 @@ def main():
        
         for i in range(0, args.count):
             for x in range(1, int(args.size)+1 ):
-                num_list.append(x)
+                x = random.randrange(2000)
+                output.write("{},".format(x-1000))
 
-            size = len(num_list)
-            
-            while(size > 0):
-                x = random.randrange(size)
-                
-                val = num_list.pop(x)
-                
-                if(size > 1):
-                    output.write("{0},".format(val))
-                else:
-                    output.write(str(val))
-                
-                size = len(num_list)
-            
             output.write("\n")
         
     except IOError:
