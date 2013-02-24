@@ -83,7 +83,10 @@ def brute_force(nums):
     vals = [ [ 0 for i in range( len(nums) ) ] for j in range( len (nums) ) ]
 
     for end in range( len(nums) ):
-        vals[0][end] = sum( nums[:end+1] )
+        if(end == 0):
+            vals[0][end] = nums[end]
+        else:
+            vals[0][end] = nums[end-1]+nums[end]
         
         if DEBUG: print "0,{}:{}".format(end, vals[0][end]) 
         
@@ -107,6 +110,7 @@ def brute_force(nums):
 
 
 def divide(nums):
+    print len(nums)
     tempmax = 0
     midmax = 0
     midstart = 0
@@ -114,7 +118,10 @@ def divide(nums):
 
     leftmax = 0
     rightmax = 0
-    
+   
+    if(len(nums) == 0):
+        return (0, 0, 0)
+
     middle = len(nums)/2
 
     midstart = middle
@@ -142,10 +149,11 @@ def divide(nums):
     (leftmax, leftstart, leftend) = divide(nums[:middle])
     (rightmax, rightstart, rightend) = divide(nums[middle:])
 
+    print( "left({}, {}, {}) right({}, {}, {}) ".format(leftmax, leftstart, leftend, rightmax, rightstart, rightend))
 
     if(midmax >= leftmax and midmax >= rightmax):
         return (midmax, midstart, midend)
-    elif(leftmax > rightmax and leftmax > midmax):
+    elif(leftmax >= rightmax and leftmax > midmax):
         return (leftmax, leftstart, leftend)
     elif(rightmax > leftmax and rightmax > midmax):
         return (rightmax, rightstart+middle, rightend+middle)
