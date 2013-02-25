@@ -1,7 +1,8 @@
 #! /usr/bin/python
-# CS 325 Implementation Assignment 1
+# CS 325 Implementation Assignment 2 
 # Devlin Junker
-# 2/1/13
+# Garrett Fleenor
+# 2/20/13
 
 import fileinput
 import argparse
