@@ -19,9 +19,9 @@ def main():
     parser = argparse.ArgumentParser();
     
     parser.add_argument("-file", default="input.txt", dest="filename", help="The name of the file to read test case inputs from, defaults to input.txt (Each test case is a seperate line of numbers where each number is seperated by a comma)")
-    parser.add_argument("-method", default=4, type=int, dest="method", help="The Algorithm to use to count inversions (1 = bruteforce [Default], 2 = Divide and Conquer, 3 = Merge Count")
+    parser.add_argument("-method", default=4, type=int, dest="method", help="The Algorithm to use to count inversions (1 = bruteforce, 2 = Divide and Conquer, 3 = Merge Count) without this option, the program will run all three methods on each input")
     parser.add_argument("numbers", default=0, type=int, metavar="N", nargs='*', help="Integers to run a test case on, if none are specified then input file is read")
-    parser.add_argument("-verbose", default=False, action="store_true", help="Specifies whether or not to output detailed information, when not set will only output the time it took to run and the max subarray value")
+    parser.add_argument("-verbose", default=False, action="store_true", help="Specifies whether or not to output detailed information, when not set will output the method used, the max subarray value and the time it took to run")
 
     args = parser.parse_args()
     
@@ -170,7 +170,8 @@ def dynamic(nums):
 
     for i in range(len(nums)):
         if(i == 0):
-            vals[i] = nums[i]
+            if(nums[i] > 0):
+                vals[i] = nums[i]
         elif(nums[i] + vals[i-1] < 0):
             vals[i] = 0
         else:
