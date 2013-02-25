@@ -19,13 +19,19 @@ def main():
     parser = argparse.ArgumentParser();
     
     parser.add_argument("-file", default="input.txt", dest="filename", help="The name of the file to read test case inputs from, defaults to input.txt (Each test case is a seperate line of numbers where each number is seperated by a comma)")
-    parser.add_argument("-method", default=1, type=int, dest="method", help="The Algorithm to use to count inversions (1 = bruteforce [Default], 2 = Divide and Conquer, 3 = Merge Count")
+    parser.add_argument("-method", default=4, type=int, dest="method", help="The Algorithm to use to count inversions (1 = bruteforce [Default], 2 = Divide and Conquer, 3 = Merge Count")
     parser.add_argument("numbers", default=0, type=int, metavar="N", nargs='*', help="Integers to run a test case on, if none are specified then input file is read")
-    
+    parser.add_argument("-verbose", default=False, action="store_true", help="Specifies whether or not to output detailed information, when not set will only output the time it took to run and the max subarray value")
+
     args = parser.parse_args()
     
     if(args.numbers != 0):
-        run_test_case(args.numbers, args.method)
+        if(args.method > 0 and args.method < 4):
+            run_test_case(args.numbers, args.method, args.verbose)
+        else:
+            run_test_case(args.numbers, 1, args.verbose)
+            run_test_case(args.numbers, 2, args.verbose)
+            run_test_case(args.numbers, 3, args.verbose)
     else:
         try:
             input = open(args.filename, 'rU')
@@ -39,11 +45,13 @@ def main():
                 if(not(nums[0])):
                     continue
 
-                
-                run_test_case(nums, 1)
-                run_test_case(nums, 2)
-                run_test_case(nums, 3)
-                
+                if(args.method > 0 and args.method < 4):
+                    run_test_case(nums, args.method, args.verbose)
+                else:                
+                    run_test_case(nums, 1, args.verbose)
+                    run_test_case(nums, 2, args.verbose)
+                    run_test_case(nums, 3, args.verbose)
+ 
         except IOError:
             print("Error Opening File")
         finally:
@@ -52,7 +60,7 @@ def main():
     
     return 0
 
-def run_test_case(nums, method):
+def run_test_case(nums, method, verbose):
     start_time = time.time()
 
     if(method == 1):
@@ -62,16 +70,16 @@ def run_test_case(nums, method):
     elif(method == 3):
          (maxval, start, end) = dynamic(nums)
     else:
-        print("Invalid Method Input Must be 1, 2 or 3")
+        print("Invalid Method:{}  Input Must be 1, 2 or 3".format(method))
         return 0
     
     end_time = time.time()
 
     total_time = end_time-start_time
 
-    details = {"size": len(nums), "max": maxval, "subarray": nums[start:end], "nums": nums, "elapsed": total_time, "method":method}
+    details = {"method": method, "size": len(nums), "max": maxval, "subarray": nums[start:end], "nums": nums, "elapsed": total_time}
     
-    print_case_details(details)
+    print_case_details(details, verbose)
 
 
 def brute_force(nums):
@@ -85,7 +93,7 @@ def brute_force(nums):
         if(end == 0):
             vals[0][end] = nums[end]
         else:
-            vals[0][end] = nums[end-1]+nums[end]
+            vals[0][end] = vals[0][end-1]+nums[end]
         
         if DEBUG: print "0,{}:{}".format(end, vals[0][end]) 
         
@@ -109,7 +117,6 @@ def brute_force(nums):
 
 
 def divide(nums):
-    print len(nums)
     tempmax = 0
     midmax = 0
     midstart = 0
@@ -118,9 +125,6 @@ def divide(nums):
     leftmax = 0
     rightmax = 0
    
-    if(len(nums) == 0):
-        return (0, 0, 0)
-
     middle = len(nums)/2
 
     midstart = middle
@@ -164,13 +168,15 @@ def dynamic(nums):
 
     vals = [0 for x in range(len(nums))]
 
-    for i in range(1, len(nums)):
+    for i in range(len(nums)):
         if(i == 0):
             vals[i] = nums[i]
         elif(nums[i] + vals[i-1] < 0):
             vals[i] = 0
         else:
             vals[i] = vals[i-1]+nums[i]
+        
+        if DEBUG: print "{}: {}".format(i, vals[i])
 
     for i in range(len(nums)):
         if(vals[i] > maxval):
@@ -187,10 +193,21 @@ def dynamic(nums):
 
     return (maxval, start, end)
 
-def print_case_details(details):
+def print_case_details(details, verbose):
     global NUM_TEST_CASES
-    output = """{0},{1},{2}""".format(NUM_TEST_CASES, details["method"], details["elapsed"])
     
+    if(verbose):
+        output = """
+        Test Case: {0}
+        Input: {1}
+        n: {2}
+        output:{3}
+        Max: {4}
+        Elapsed Time: {5}
+        """.format(NUM_TEST_CASES, details["nums"], details["size"], details["subarray"], details["max"], details["elapsed"])
+    else:
+        output="Method: {}  Max: {}  Time: {}".format(details["method"], details["max"], details["elapsed"])
+
     NUM_TEST_CASES = NUM_TEST_CASES + 1
 
     print(output)
