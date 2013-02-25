@@ -207,7 +207,7 @@ def print_case_details(details, verbose):
         Elapsed Time: {5}
         """.format(NUM_TEST_CASES, details["nums"], details["size"], details["subarray"], details["max"], details["elapsed"])
     else:
-        output="Method: {}  Max: {}  Time: {}".format(details["method"], details["max"], details["elapsed"])
+        output="Method: {0}  Max: {1}  Time: {2}".format(details["method"], details["max"], details["elapsed"])
 
     NUM_TEST_CASES = NUM_TEST_CASES + 1
 
