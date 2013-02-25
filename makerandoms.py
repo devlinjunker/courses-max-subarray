@@ -9,7 +9,7 @@ import random
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("size", default=100, type=int, help="The size of the randomly generated list to create")
+    parser.add_argument("-size", default=100, type=int, help="The size of the randomly generated list to create")
     parser.add_argument("-output", default="output.txt", dest="output", help="File to save randomly generated list in")
     parser.add_argument("-count", default=1, type=int, dest="count", help="Number of lists to create")
 

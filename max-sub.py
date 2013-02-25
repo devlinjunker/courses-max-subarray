@@ -8,16 +8,12 @@ import argparse
 import string
 import time
 import sys
-import resource
 
 NUM_TEST_CASES = 1
 
 DEBUG = 0
 
 def main():
-    sys.setrecursionlimit(100000)
-    soft, hard = resource.getrlimit(resource.RLIMIT_STACK)
-    resource.setrlimit(resource.RLIMIT_STACK, (hard, hard))
     input = False
 
     parser = argparse.ArgumentParser();
@@ -42,8 +38,11 @@ def main():
 
                 if(not(nums[0])):
                     continue
+
                 
-                run_test_case(nums, args.method)
+                run_test_case(nums, 1)
+                run_test_case(nums, 2)
+                run_test_case(nums, 3)
                 
         except IOError:
             print("Error Opening File")
@@ -70,7 +69,7 @@ def run_test_case(nums, method):
 
     total_time = end_time-start_time
 
-    details = {"size": len(nums), "max": maxval, "subarray": nums[start:end], "nums": nums, "elapsed": total_time}
+    details = {"size": len(nums), "max": maxval, "subarray": nums[start:end], "nums": nums, "elapsed": total_time, "method":method}
     
     print_case_details(details)
 
@@ -190,14 +189,7 @@ def dynamic(nums):
 
 def print_case_details(details):
     global NUM_TEST_CASES
-    output = """
-    Test Case: {0}
-    Input: {1}
-    n: {2}
-    output:{3}
-    Max: {4}
-    Elapsed Time: {5}
-    """.format(NUM_TEST_CASES, details["nums"], details["size"], details["subarray"], details["max"], details["elapsed"])
+    output = """{0},{1},{2}""".format(NUM_TEST_CASES, details["method"], details["elapsed"])
     
     NUM_TEST_CASES = NUM_TEST_CASES + 1
 
